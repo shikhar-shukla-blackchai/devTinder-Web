@@ -28,7 +28,6 @@ const EditProfile = ({ user }) => {
         setTost(false);
       }, 3000);
     } catch (err) {
-      console.error("Update error:", err);
       if (err.response?.status === 400) {
         setError(err.response.data.errors);
       } else {
