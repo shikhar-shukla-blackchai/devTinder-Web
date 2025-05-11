@@ -1,5 +1,5 @@
-import Navbar from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
@@ -20,7 +20,7 @@ const Body = () => {
       });
       dispatch(addUser(res.data));
     } catch (err) {
-      if (err.status === 401) {
+      if (err.response?.status === 401) {
         navigate("/login");
       }
       console.error(err.message);
@@ -32,9 +32,11 @@ const Body = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-100 min-h-screen flex flex-col">
       <Navbar />
-      <Outlet />
+      <main className="flex-grow pt-16 pb-16">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

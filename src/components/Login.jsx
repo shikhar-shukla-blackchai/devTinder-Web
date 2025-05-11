@@ -9,7 +9,6 @@ const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const [isSignUpForm, setIsSignUpForm] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -24,16 +23,15 @@ const Login = () => {
         { emailId, password },
         { withCredentials: true }
       );
-
       dispatch(addUser(res.data));
       navigate("/");
     } catch (err) {
-      setError(err?.response?.data);
-      console.error();
+      setError(err?.response?.data || "Login failed");
+      console.error(err);
     }
   };
 
-  const handleSignUP = async () => {
+  const handleSignUp = async () => {
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -43,78 +41,106 @@ const Login = () => {
       dispatch(addUser(res.data.data));
       navigate("/profile");
     } catch (error) {
+      setError(error?.response?.data || "Signup failed");
       console.error(error);
     }
   };
 
   return (
-    <div className="flex justify-center mt-10">
-      <div className="card bg-base-300 w-96 shadow-sm rounded-xl">
-        <div className="card-body">
-          <h2 className="card-title justify-center">
-            {isSignUpForm ? "signUp" : "Login"}{" "}
-          </h2>
-          <div>
-            {isSignUpForm && (
-              <>
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend">First Name</legend>
-                  <input
-                    type="text"
-                    className="input"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </fieldset>
-                <fieldset className="fieldset">
-                  <legend className="fieldset-legend">Last name</legend>
-                  <input
-                    type="text"
-                    className="input"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </fieldset>
-              </>
-            )}
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Email Id</legend>
-              <input
-                type="text"
-                className="input"
-                value={emailId}
-                onChange={(e) => setEmailId(e.target.value)}
-              />
-            </fieldset>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Password</legend>
-              <input
-                type="text"
-                className="input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </fieldset>
-          </div>
-          <p className="text-red-950 font-bold text-xl">{error}</p>
-          <div className="card-actions justify-center">
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                if (!isSignUpForm) {
-                  handleLogin();
-                } else handleSignUP();
-              }}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-500 to-orange-500">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          {isSignUpForm ? "Create Account" : "Welcome Back"}
+        </h2>
+        <div className="space-y-4">
+          {isSignUpForm && (
+            <>
+              <div className="relative">
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-100 border-none focus:ring-2 focus:ring-pink-500 peer"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder=" "
+                  id="firstName"
+                />
+                <label
+                  htmlFor="firstName"
+                  className="absolute top-3 left-4 text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-sm peer-focus:text-pink-500 peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-pink-500"
+                >
+                  First Name
+                </label>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-100 border-none focus:ring-2 focus:ring-pink-500 peer"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder=" "
+                  id="lastName"
+                />
+                <label
+                  htmlFor="lastName"
+                  className="absolute top-3 left-4 text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-sm peer-focus:text-pink-500 peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-pink-500"
+                >
+                  Last Name
+                </label>
+              </div>
+            </>
+          )}
+          <div className="relative">
+            <input
+              type="email"
+              className="w-full px-4 py-3 rounded-lg bg-gray-100 border-none focus:ring-2 focus:ring-pink-500 peer"
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
+              placeholder=" "
+              id="email"
+            />
+            <label
+              htmlFor="email"
+              className="absolute top-3 left-4 text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-sm peer-focus:text-pink-500 peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-pink-500"
             >
-              {isSignUpForm ? "Sing Up" : " login"}
-            </button>
+              Email
+            </label>
           </div>
-          <p onClick={() => setIsSignUpForm((value) => !value)}>
-            {isSignUpForm
-              ? "already have an account then Login!!"
-              : "Don't have an account? create the account"}
-          </p>
+          <div className="relative">
+            <input
+              type="password"
+              className="w-full px-4 py-3 rounded-lg bg-gray-100 border-none focus:ring-2 focus:ring-pink-500 peer"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder=" "
+              id="password"
+            />
+            <label
+              htmlFor="password"
+              className="absolute top-3 left-4 text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-6 peer-focus:text-sm peer-focus:text-pink-500 peer-[:not(:placeholder-shown)]:-top-6 peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:text-pink-500"
+            >
+              Password
+            </label>
+          </div>
         </div>
+        {error && (
+          <p className="text-red-500 text-center mt-4 font-semibold">{error}</p>
+        )}
+        <div className="mt-6">
+          <button
+            className="w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 to-orange-500 text-white font-semibold hover:opacity-90 transition-opacity"
+            onClick={isSignUpForm ? handleSignUp : handleLogin}
+          >
+            {isSignUpForm ? "Sign Up" : "Log In"}
+          </button>
+        </div>
+        <p
+          className="text-center mt-4 text-gray-600 underline cursor-pointer hover:text-pink-500"
+          onClick={() => setIsSignUpForm(!isSignUpForm)}
+        >
+          {isSignUpForm
+            ? "Already have an account? Log In"
+            : "Don't have an account? Sign Up"}
+        </p>
       </div>
     </div>
   );

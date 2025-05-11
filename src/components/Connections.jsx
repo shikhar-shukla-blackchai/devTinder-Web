@@ -7,6 +7,7 @@ import { addConnections } from "../utils/connections";
 const Connections = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
+
   const fetchConnections = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/connections", {
@@ -14,7 +15,7 @@ const Connections = () => {
       });
       dispatch(addConnections(res?.data?.data));
     } catch (err) {
-      console.error(err.response.data.errors);
+      console.error(err.response?.data?.errors || err.message);
     }
   };
 
@@ -22,40 +23,56 @@ const Connections = () => {
     fetchConnections();
   }, []);
 
-  //   if (!connections) return;
-  //   if (connections.length === 0) return <h2>Make some online Friends</h2>;
-
   return (
-    <div>
-      <div className="flex flex-row justify-center my-5 border-base-300">
-        <ul className="list bg-base-100 rounded-box shadow-md">
-          <li className="p-4 pb-2 bg-base-200 opacity-60 tracking-wide text-2xl font-bold">
-            Connections{" "}
-          </li>
-
-          {connections &&
-            connections.map((connect, index) => {
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-16">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Your Connections
+        </h2>
+        {!connections ? (
+          <p className="text-center text-gray-600">Loading connections...</p>
+        ) : connections.length === 0 ? (
+          <p className="text-center text-gray-600">Make some online friends!</p>
+        ) : (
+          <ul className="space-y-4">
+            {connections.map((connect, index) => {
               const { _id, firstName, lastName, age, gender, about, photoUrl } =
                 connect;
               return (
-                <li className="list-row bg-base-300 " key={_id}>
-                  <div className="text-4xl font-thin opacity-30 tabular-nums">
-                    {index + 1}
+                <li
+                  key={_id}
+                  className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-12 h-12 rounded-full object-cover"
+                      src={photoUrl || "https://via.placeholder.com/50"}
+                      alt={`${firstName} ${lastName}`}
+                    />
                   </div>
-                  <div>
-                    <img className="size-10 rounded-box" src={photoUrl} />
-                  </div>
-                  <div className="list-col-grow">
-                    <div>{firstName + " " + lastName}</div>
-                    {age && gender && <div>{age + ", " + gender}</div>}
-                    <div className="text-xs uppercase font-semibold opacity-60">
-                      {about}
+                  <div className="ml-4 flex-grow">
+                    <div className="text-lg font-semibold text-gray-800">
+                      {firstName} {lastName}
                     </div>
+                    {age && gender && (
+                      <div className="text-sm text-gray-600">
+                        {age}, {gender}
+                      </div>
+                    )}
+                    {about && (
+                      <div className="text-sm text-gray-500 line-clamp-2">
+                        {about}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-gray-400 text-2xl font-thin">
+                    {index + 1}
                   </div>
                 </li>
               );
             })}
-        </ul>
+          </ul>
+        )}
       </div>
     </div>
   );

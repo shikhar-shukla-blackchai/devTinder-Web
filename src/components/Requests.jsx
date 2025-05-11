@@ -36,53 +36,67 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
-  if (requests === 0) {
-    return <h1>Not a single person has sended you the connection request</h1>;
-  }
-  if (!requests) return;
-
   return (
-    <div>
-      <div className="flex flex-row justify-center my-5 border-base-300">
-        <ul className="list bg-base-100 rounded-box shadow-md">
-          <li className="p-4 pb-2 bg-base-200 opacity-60 tracking-wide text-2xl font-bold">
-            Requests
-          </li>
-
-          {requests &&
-            requests.map((request, index) => {
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-16">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Connection Requests
+        </h2>
+        {!requests ? (
+          <p className="text-center text-gray-600">Loading requests...</p>
+        ) : requests.length === 0 ? (
+          <p className="text-center text-gray-600">
+            No one has sent you a connection request yet.
+          </p>
+        ) : (
+          <ul className="space-y-4">
+            {requests.map((request, index) => {
               const { _id, firstName, lastName, about, photoUrl } =
                 request.fromUserId;
               return (
-                <li className="list-row bg-base-300 " key={_id}>
-                  <div className="text-4xl font-thin opacity-30 tabular-nums">
+                <li
+                  key={_id}
+                  className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-12 h-12 rounded-full object-cover"
+                      src={photoUrl || "https://via.placeholder.com/50"}
+                      alt={`${firstName} ${lastName}`}
+                    />
+                  </div>
+                  <div className="ml-4 flex-grow">
+                    <div className="text-lg font-semibold text-gray-800">
+                      {firstName} {lastName}
+                    </div>
+                    {about && (
+                      <div className="text-sm text-gray-500 line-clamp-2">
+                        {about}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                      onClick={() => reviewRequest("rejected", request._id)}
+                    >
+                      Reject
+                    </button>
+                    <button
+                      className="bg-gradient-to-r from-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                      onClick={() => reviewRequest("accepted", request._id)}
+                    >
+                      Accept
+                    </button>
+                  </div>
+                  <div className="text-gray-400 text-2xl font-thin ml-4">
                     {index + 1}
                   </div>
-                  <div>
-                    <img className="size-10 rounded-box" src={photoUrl} />
-                  </div>
-                  <div className="list-col-grow">
-                    <div>{firstName + " " + lastName}</div>
-                    <div className="text-xs uppercase font-semibold opacity-60">
-                      {about}
-                    </div>
-                  </div>
-                  <button
-                    className="btn btn-neutral"
-                    onClick={() => reviewRequest("rejected", request._id)}
-                  >
-                    Reject
-                  </button>
-                  <button
-                    className="btn btn-error "
-                    onClick={() => reviewRequest("accepted", request._id)}
-                  >
-                    Accept
-                  </button>
                 </li>
               );
             })}
-        </ul>
+          </ul>
+        )}
       </div>
     </div>
   );
