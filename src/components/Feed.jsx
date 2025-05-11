@@ -17,6 +17,11 @@ const Feed = () => {
   useEffect(() => {
     getFeed();
   }, []);
+
+  if (!feed) return;
+  if (feed <= 0)
+    return <h1>User Feed is completed, No New user left to interact!!!</h1>;
+
   return (
     feed && (
       <div className="flex justify-center my-10">

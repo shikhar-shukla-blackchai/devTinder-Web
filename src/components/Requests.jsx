@@ -8,24 +8,9 @@ const Requests = () => {
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.requests);
 
-  const fetchRequests = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/user/received/request", {
-        withCredentials: true,
-      });
-      dispatch(addRequests(res?.data?.data));
-      console.log(requests);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-  useEffect(() => {
-    fetchRequests();
-  }, []);
-
   const reviewRequest = async (status, _id) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         BASE_URL + "/request/review/" + status + "/" + _id,
         {},
         { withCredentials: true }
@@ -35,6 +20,21 @@ const Requests = () => {
       console.error(err.message);
     }
   };
+
+  const fetchRequests = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/user/received/request", {
+        withCredentials: true,
+      });
+      dispatch(addRequests(res?.data?.data));
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
   if (requests === 0) {
     return <h1>Not a single person has sended you the connection request</h1>;
@@ -53,7 +53,6 @@ const Requests = () => {
             requests.map((request, index) => {
               const { _id, firstName, lastName, about, photoUrl } =
                 request.fromUserId;
-              console.log(request);
               return (
                 <li className="list-row bg-base-300 " key={_id}>
                   <div className="text-4xl font-thin opacity-30 tabular-nums">
