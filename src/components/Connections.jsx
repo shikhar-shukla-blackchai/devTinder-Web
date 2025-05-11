@@ -13,7 +13,6 @@ const Connections = () => {
         withCredentials: true,
       });
       dispatch(addConnections(res?.data?.data));
-      console.log("connections", connections);
     } catch (err) {
       console.error(err.response.data.errors);
     }
@@ -36,10 +35,10 @@ const Connections = () => {
 
           {connections &&
             connections.map((connect, index) => {
-              const { firstName, lastName, age, gender, about, photoUrl } =
+              const { _id, firstName, lastName, age, gender, about, photoUrl } =
                 connect;
               return (
-                <li className="list-row bg-base-300 " key={index}>
+                <li className="list-row bg-base-300 " key={_id}>
                   <div className="text-4xl font-thin opacity-30 tabular-nums">
                     {index + 1}
                   </div>
@@ -48,6 +47,7 @@ const Connections = () => {
                   </div>
                   <div className="list-col-grow">
                     <div>{firstName + " " + lastName}</div>
+                    {age && gender && <div>{age + ", " + gender}</div>}
                     <div className="text-xs uppercase font-semibold opacity-60">
                       {about}
                     </div>

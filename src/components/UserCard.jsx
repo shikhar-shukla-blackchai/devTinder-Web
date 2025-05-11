@@ -1,6 +1,7 @@
-import React from "react";
-
 const UserCard = ({ user }) => {
+  if (!user)
+    return <h1>User Feed is completed, No New user left to interact!!!</h1>;
+  console.log(user);
   const { firstName, lastName, age, gender, skills, about, photoUrl } = user;
 
   return (

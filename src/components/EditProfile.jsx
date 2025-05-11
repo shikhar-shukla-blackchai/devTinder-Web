@@ -21,7 +21,7 @@ const EditProfile = ({ user }) => {
     try {
       //prettier-ignore
       const res = await axios.patch(BASE_URL+"/profile/edit",{ firstName, lastName, age, gender, skills, about, photoUrl}, {withCredentials:true});
-      dispatch(addUser(res.data.data));
+      dispatch(addUser(res?.data?.data));
 
       setTost(true);
       setTimeout(() => {
