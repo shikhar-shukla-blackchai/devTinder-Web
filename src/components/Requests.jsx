@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequests } from "../utils/requests";
+import { addRequests, removeRequest } from "../utils/requests";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -22,6 +22,25 @@ const Requests = () => {
   useEffect(() => {
     fetchRequests();
   }, []);
+
+  const reviewRequest = async (status, _id) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeRequest(_id));
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  if (requests === 0) {
+    return <h1>Not a single person has sended you the connection request</h1>;
+  }
+  if (!requests) return;
+
   return (
     <div>
       <div className="flex flex-row justify-center my-5 border-base-300">
@@ -31,10 +50,10 @@ const Requests = () => {
           </li>
 
           {requests &&
-            requests.map((requests, index) => {
+            requests.map((request, index) => {
               const { _id, firstName, lastName, about, photoUrl } =
-                requests.fromUserId;
-              console.log(requests);
+                request.fromUserId;
+              console.log(request);
               return (
                 <li className="list-row bg-base-300 " key={_id}>
                   <div className="text-4xl font-thin opacity-30 tabular-nums">
@@ -49,8 +68,18 @@ const Requests = () => {
                       {about}
                     </div>
                   </div>
-                  <button className="btn btn-neutral">Reject</button>
-                  <button className="btn btn-error ">Accept</button>
+                  <button
+                    className="btn btn-neutral"
+                    onClick={() => reviewRequest("rejected", request._id)}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className="btn btn-error "
+                    onClick={() => reviewRequest("accepted", request._id)}
+                  >
+                    Accept
+                  </button>
                 </li>
               );
             })}
