@@ -36,10 +36,13 @@ const Navbar = () => {
           </div>
           {user ? (
             <div className="flex items-center space-x-4">
-              <span className="hidden sm:block text-gray-700 font-medium">
-                Welcome, {user.firstName}
-              </span>
               <div className="hidden sm:flex space-x-4">
+                <Link
+                  to="/"
+                  className="text-gray-600 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Home
+                </Link>
                 <Link
                   to="/profile"
                   className="text-gray-600 hover:text-pink-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
